@@ -2,6 +2,11 @@ import csv
 import random
 from faker import Faker
 
+
+from google.cloud import bigquery
+client = bigquery.Client()
+
+
 faker = Faker()
 
 incident_types = ["Medical", "Fire", "Accident", "Crime"]
