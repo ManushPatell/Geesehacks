@@ -1,0 +1,107 @@
+/* Importing a Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #181818; /* Dark background */
+    color: #ddd; /* Light text for dark mode */
+}
+
+h1, h2, h3 {
+    color: #fff;
+}
+
+/* Emergency Call Section */
+#emergency-call {
+    background-color: #222; /* Darker background */
+    padding: 20px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+#emergency-call h3 {
+    text-align: center;
+    color: #fff;
+}
+
+#emergency-call label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ddd;
+}
+
+#emergency-call input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #444;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+    font-size: 16px;
+}
+
+#emergency-call button {
+    background-color: #2C3E50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 4px;
+}
+
+#emergency-call button:hover {
+    background-color: #2C3E50;
+}
+
+/* Map Section */
+#map-section {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#map {
+    height: 500px;
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* About Section */
+.about-section {
+    background-color: #222; /* Dark background */
+    padding: 20px;
+    margin: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.about-section h2 {
+    text-align: center;
+    color: #fff;
+}
+
+.about-section p {
+    line-height: 1.6;
+    text-align: center;
+    color: #ccc;
+}
+
+/* Footer */
+.footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
