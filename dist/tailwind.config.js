@@ -2,6 +2,8 @@ let map;
 let directionsService;
 let directionsRenderer;
 
+
+
 function initMap() {
   console.log('Map initialized');
   // Initialize the map centered on the Waterloo Police Station
