@@ -47,17 +47,6 @@ h1, h2, h3 {
     font-size: 16px;
 }
 
-#emergency-call button {
-    background-color: #2C3E50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    width: 100%;
-    border-radius: 4px;
-}
-
 #emergency-call button:hover {
     background-color: #2C3E50;
 }
@@ -105,3 +94,50 @@ h1, h2, h3 {
     bottom: 0;
     width: 100%;
 }
+
+/* Emergency Button Styles */
+#police-btn {
+    background-color: #7491FA; /* Police button color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 4px;
+}
+
+#police-btn:hover {
+    background-color: darkblue; /* Hover effect for Police button */
+}
+
+#ambulance-btn {
+    background-color: #64E662; /* Ambulance button color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 4px;
+}
+
+#ambulance-btn:hover {
+    background-color: darkgreen; /* Hover effect for Ambulance button */
+}
+
+#fire-btn {
+    background-color: #EA7E6C; /* Fire button color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 4px;
+}
+
+#fire-btn:hover {
+    background-color: darkred; /* Hover effect for Fire button */
+}
+

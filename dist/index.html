@@ -10,6 +10,25 @@
             height: 500px;
             width: 100%;
         }
+
+        #emergency-buttons {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 200px;
+            border-radius: 5px;
+        }
+
+
+
+
         #estimated-time {
             font-size: 16px;
             margin-top: 10px;
@@ -18,142 +37,168 @@
     </style>
 </head>
 <body>
-    <!-- Emergency Call Section -->
     <section id="emergency-call">
         <h3>Call for Emergency</h3>
         <label for="caller-address">Enter your address:</label>
         <input type="text" id="caller-address" placeholder="Enter address" required>
-        <button id="get-route-btn">Get Route</button>
+        <div id="emergency-buttons">
+            <button id="police-btn">Police</button>
+            <button id="ambulance-btn">Ambulance</button>
+            <button id="fire-btn">Fire</button>
+        </div>
     </section>
 
-    <!-- Map Section -->
-    <section id="map-section" class="map-section">
+    <section id="map-section">
         <h2>Fastest Route for First Responders</h2>
         <div id="map"></div>
-        <div id="estimated-time"></div> <!-- Display estimated time here -->
+        <div id="estimated-time"></div>
+        
     </section>
 
-    <!-- Google Maps Script with API Key -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMCXzMEoiMw_Njy9r1QSEJKbqKcbDvhGk&libraries=places&callback=initMap" async defer></script>
 
-
     <script>
-      let map;
-      let directionsService;
-      let directionsRenderer;
-      let policeCars = [];  // Array to hold police car locations
+        let map;
+        let directionsService;
+        let directionsRenderer;
+        let policeMarkers = [];
+        let ambulanceMarkers = [];
+        let firetruckMarkers = [];
 
-      // Sample locations for police cars (randomized near Waterloo Police Station)
-      const policeCarLocations = [
-          { lat: 43.4631, lng: -80.5204 }, // Location 1
-          { lat: 43.4600, lng: -80.5235 }, // Location 2
-          { lat: 43.4645, lng: -80.5180 }, // Location 3
-          { lat: 43.4610, lng: -80.5150 }, // Location 4
-      ];
+        // Hardcoded locations for responders
+        const policeCarLocations = [
+            { lat: 43.4631, lng: -80.5204 },
+            { lat: 43.4600, lng: -80.5235 },
+            { lat: 43.4645, lng: -80.5180 },
+            { lat: 43.4610, lng: -80.5150 }
+        ];
 
-      // Initialize the map
-      function initMap() {
-          map = new google.maps.Map(document.getElementById('map'), {
-              center: { lat: 43.4631, lng: -80.5204 }, // Waterloo Police Station location
-              zoom: 14
-          });
+        const ambulanceLocations = [
+            { lat: 43.4650, lng: -80.5220 },
+            { lat: 43.4620, lng: -80.5190 }
+        ];
 
-          directionsService = new google.maps.DirectionsService();
-          directionsRenderer = new google.maps.DirectionsRenderer();
-          directionsRenderer.setMap(map);
+        const firetruckLocations = [
+            { lat: 43.4660, lng: -80.5240 },
+            { lat: 43.4635, lng: -80.5175 }
+        ];
 
-          // Place police car markers on the map
-          policeCarLocations.forEach(location => {
-              const marker = new google.maps.Marker({
-                  position: location,
-                  map: map,
-                  title: 'Police Car'
-              });
-              policeCars.push(marker);  // Save each marker for reference
-          });
-      }
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 43.4631, lng: -80.5204 },
+                zoom: 14
+            });
 
-      // Function to calculate the distance between two locations using Haversine formula
-      function haversineDistance(lat1, lon1, lat2, lon2) {
-          const R = 6371; // Radius of the Earth in km
-          const dLat = (lat2 - lat1) * Math.PI / 180;
-          const dLon = (lon2 - lon1) * Math.PI / 180;
-          const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-          const distance = R * c; // Distance in km
-          return distance;
-      }
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map);
 
-      // Function to handle the user's request and find the closest police car
-      function getRoute() {
-          const address = document.getElementById('caller-address').value;
-          if (!address) {
-              alert('Please enter an address.');
-              return;
-          }
+            // Add markers
+            policeCarLocations.forEach(location => {
+                const marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    title: 'Police Car',
+                    icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+                });
+                policeMarkers.push(marker);
+            });
 
-          // Geocode the caller's address
-          const geocoder = new google.maps.Geocoder();
-          geocoder.geocode({ address: address }, (results, status) => {
-              if (status === google.maps.GeocoderStatus.OK) {
-                  const callerLocation = results[0].geometry.location;
-                  const callerLat = callerLocation.lat();
-                  const callerLng = callerLocation.lng();
-                  
-                  // Find the closest police car
-                  let closestCar = null;
-                  let minDistance = Infinity;
-                  policeCarLocations.forEach((carLocation, index) => {
-                      const distance = haversineDistance(callerLat, callerLng, carLocation.lat, carLocation.lng);
-                      if (distance < minDistance) {
-                          minDistance = distance;
-                          closestCar = policeCars[index];
-                      }
-                  });
+            ambulanceLocations.forEach(location => {
+                const marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    title: 'Ambulance',
+                    icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+                });
+                ambulanceMarkers.push(marker);
+            });
 
-                  // Display the route to the closest police car
-                  if (closestCar) {
-                      const request = {
-                          origin: closestCar.getPosition(),
-                          destination: callerLocation,
-                          travelMode: google.maps.TravelMode.DRIVING,
-                          unitSystem: google.maps.UnitSystem.METRIC
-                      };
+            firetruckLocations.forEach(location => {
+                const marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    title: 'Firetruck',
+                    icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+                });
+                firetruckMarkers.push(marker);
+            });
+        }
 
-                      directionsService.route(request, (result, status) => {
-                          if (status === google.maps.DirectionsStatus.OK) {
-                              directionsRenderer.setDirections(result);
-                            const duration = result.routes[0].legs[0].duration.text;  // Duration in text
+        function haversineDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Earth radius in km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
 
-                              document.getElementById('estimated-time').innerText = `Estimated Time: ${duration}`;
-                              alert('Closest police car notified!');
-                          } else {
-                              alert('Directions request failed: ' + status);
-                          }
-                      });
-                  }
-              } else {
-                  alert('Geocode failed: ' + status);
-              }
-          });
-      }
+        function getRoute(selectedMarkers) {
+            const address = document.getElementById('caller-address').value;
+            if (!address) {
+                alert('Please enter an address.');
+                return;
+            }
 
-      // Attach the event listener to the button
-      document.getElementById('get-route-btn').addEventListener('click', getRoute);
-  </script>
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ address: address }, (results, status) => {
+                if (status === google.maps.GeocoderStatus.OK) {
+                    const callerLocation = results[0].geometry.location;
 
+                    let closestMarker = null;
+                    let minDistance = Infinity;
 
-    <!-- Include the JavaScript file -->
-    <script src="tailwind.config.js"></script>
+                    selectedMarkers.forEach(marker => {
+                        const distance = haversineDistance(
+                            callerLocation.lat(),
+                            callerLocation.lng(),
+                            marker.getPosition().lat(),
+                            marker.getPosition().lng()
+                        );
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            closestMarker = marker;
+                        }
+                    });
 
+                    if (closestMarker) {
+                        const request = {
+                            origin: closestMarker.getPosition(),
+                            destination: callerLocation,
+                            travelMode: google.maps.TravelMode.DRIVING
+                        };
 
-    <script>
-        // This ensures the map is initialized when the page loads
+                        directionsService.route(request, (result, status) => {
+                            if (status === google.maps.DirectionsStatus.OK) {
+                                directionsRenderer.setDirections(result);
+                                const duration = result.routes[0].legs[0].duration.text;
+                                document.getElementById('estimated-time').innerText = `Estimated Time: ${duration}`;
+                            } else {
+                                alert('Route request failed: ' + status);
+                            }
+                        });
+                    }
+                } else {
+                    alert('Geocode failed: ' + status);
+                }
+            });
+        }
+
+        document.getElementById('police-btn').addEventListener('click', () => {
+            getRoute(policeMarkers);
+        });
+
+        document.getElementById('ambulance-btn').addEventListener('click', () => {
+            getRoute(ambulanceMarkers);
+        });
+
+        document.getElementById('fire-btn').addEventListener('click', () => {
+            getRoute(firetruckMarkers);
+        });
+
         window.onload = initMap;
     </script>
 </body>
 </html>
-
-<!--AIzaSyCMCXzMEoiMw_Njy9r1QSEJKbqKcbDvhGk  API KEY -->
